@@ -1,5 +1,4 @@
 'use strict';
 
-(() => {
-  window.activeMode.turnOff();
-})();
+window.activeMode.turnOff();
+
