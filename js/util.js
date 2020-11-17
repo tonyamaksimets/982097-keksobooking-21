@@ -83,6 +83,25 @@ const debounce = (cb, debounceInterval) => {
   };
 };
 
+const getNoun = (number, zero, one, two, five) => {
+  let n = Math.abs(number);
+  n %= 100;
+  if (n >= 5 && n <= 20) {
+    return five;
+  }
+  n %= 10;
+  if (n === 1) {
+    return one;
+  }
+  if (n >= 2 && n <= 4) {
+    return two;
+  }
+  if (n === 0) {
+    return zero;
+  }
+  return five;
+};
+
 window.util = {
   clearElement,
   toggleFormDisability,
@@ -90,4 +109,5 @@ window.util = {
   isEscEvent,
   fitToRange,
   debounce,
+  getNoun,
 };

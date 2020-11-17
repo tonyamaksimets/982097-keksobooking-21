@@ -1,19 +1,19 @@
 'use strict';
 
-
+const LEFT_MOUSE_BUTTON_CODE = 0;
 const TIMEOUT_IN_MS = 10000;
-const serverDownloadURL = `https://21.javascript.pages.academy/keksobooking/data`;
+const SERVER_DOWNLOAD_URL = `https://21.javascript.pages.academy/keksobooking/data`;
 
 const map = document.querySelector(`.map`);
 const adForm = document.querySelector(`.ad-form`);
 const filtersForm = document.querySelector(`.map__filters`);
 
 const mainPin = map.querySelector(`.map__pin--main`);
-const defaultMainPinLeft = 570;
-const defaultMainPinTop = 375;
+const DEFAULT_MAIN_PIN_LEFT = 570;
+const DEFAULT_MAIN_PIN_TOP = 375;
 
 const onNoActiveMainPinMouseDown = (evt) => {
-  if (evt.button === 0) {
+  if (evt.button === LEFT_MOUSE_BUTTON_CODE) {
     turnOnActiveMode(evt);
   }
 };
@@ -34,21 +34,19 @@ const turnOffActiveMode = () => {
   filtersForm.reset();
   window.adsFilters.deactivate();
 
-  mainPin.style.left = `${defaultMainPinLeft}px`;
-  mainPin.style.top = `${defaultMainPinTop}px`;
-  window.pin.changeAddress(defaultMainPinLeft, defaultMainPinTop);
+  mainPin.style.left = `${DEFAULT_MAIN_PIN_LEFT}px`;
+  mainPin.style.top = `${DEFAULT_MAIN_PIN_TOP}px`;
+  window.pin.changeAddress(DEFAULT_MAIN_PIN_LEFT, DEFAULT_MAIN_PIN_TOP);
 
   mainPin.removeEventListener(`mousedown`, window.pin.onMainPinMouseDown);
   mainPin.removeEventListener(`keydown`, window.pin.onMainPinKeydown);
 
   mainPin.addEventListener(`mousedown`, onNoActiveMainPinMouseDown);
   mainPin.addEventListener(`keydown`, onNoActiveMainPinKeydown);
-
-
 };
 
 const turnOnActiveMode = (evt) => {
-  window.load(serverDownloadURL, `GET`, window.ads.load, window.ads.errorLoad, TIMEOUT_IN_MS);
+  window.load(SERVER_DOWNLOAD_URL, `GET`, window.ads.load, window.ads.errorLoad, TIMEOUT_IN_MS);
 
   map.classList.remove(`map--faded`);
 
@@ -67,6 +65,8 @@ const turnOnActiveMode = (evt) => {
   mainPin.removeEventListener(`keydown`, onNoActiveMainPinKeydown);
 
 };
+
+turnOffActiveMode();
 
 window.activeMode = {
   turnOff: turnOffActiveMode,

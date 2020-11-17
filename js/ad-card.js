@@ -47,36 +47,22 @@ const photoTemplate = adCard.querySelector(`.popup__photo`);
 
 const renderCapacity = (ad) => {
   const capacity = adCard.querySelector(`.popup__text--capacity`);
-  let roomsText = ``;
 
-  if (ad.offer.rooms) {
-    roomsText = `${ad.offer.rooms} комнат`;
+  const roomsText = (ad.offer.rooms) ? window.util.getNoun(ad.offer.rooms, `Без комнат`, `${ad.offer.rooms} комната`, `${ad.offer.rooms} комнаты`, `${ad.offer.rooms} комнат`) : ``;
 
-    if (ad.offer.rooms === 0) {
-      roomsText = `Без комнат`;
-    } else if (ad.offer.rooms % 10 === 1 && ad.offer.rooms !== 11) {
-      roomsText = `${ad.offer.rooms} комната`;
-    } else if ((ad.offer.rooms % 10 === 2 && ad.offer.rooms !== 12) || (ad.offer.rooms % 10 === 3 && ad.offer.rooms !== 13) || (ad.offer.rooms % 10 === 4 && ad.offer.rooms !== 14)) {
-      roomsText = `${ad.offer.rooms} комнаты`;
-    }
-  }
-
-  let guestsText = ``;
-
-  if (ad.offer.guests) {
-    guestsText = ` для ${ad.offer.guests} гостей`;
-
-    if (ad.offer.guests === 0) {
-      guestsText = `, не для гостей`;
-    } else if (ad.offer.guests % 10 === 1 && ad.offer.guests !== 11) {
-      guestsText = ` для ${ad.offer.guests} гостя`;
-    }
+  let guestsText;
+  if (roomsText) {
+    guestsText = (ad.offer.guests) ? window.util.getNoun(ad.offer.guests, `, не для гостей`, ` для ${ad.offer.guests} гостя`, ` для ${ad.offer.guests} гостей`, ` для ${ad.offer.guests} гостей`) : ``;
+  } else {
+    guestsText = (ad.offer.guests) ? window.util.getNoun(ad.offer.guests, `Не для гостей`, `Для ${ad.offer.guests} гостя`, `Для ${ad.offer.guests} гостей`, `Для ${ad.offer.guests} гостей`) : ``;
   }
 
   capacity.textContent = `${roomsText}${guestsText}`;
 
   if (!capacity.textContent) {
     capacity.classList.add(`hidden`);
+  } else {
+    capacity.classList.remove(`hidden`);
   }
 };
 
@@ -98,11 +84,14 @@ const renderCheckTime = (ad) => {
 
   if (timeText) {
     time.classList.add(`hidden`);
+  } else {
+    time.classList.remove(`hidden`);
   }
 };
 
 const isAdFieldExist = (adField, cardField, action) => {
   if (adField) {
+    cardField.classList.remove(`hidden`);
     action();
   } else {
     cardField.classList.add(`hidden`);

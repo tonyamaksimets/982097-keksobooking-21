@@ -12,7 +12,6 @@ module.exports = {
     "./js/active-mode.js",
     "./js/ad-form-status-message.js",
     "./js/ad-form.js",
-    "./js/main.js"
   ],
   output: {
     filename: "bundle.js",

@@ -4,6 +4,8 @@ const ACCERTABLE_FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
 const TITLE_MAX_LENGTH = 100;
 const TITLE_MIN_LENGTH = 30;
 const MAX_PRICE = 1000000;
+const MIN_GUESTS_VALUE = 0;
+const MAX_ROOMS_VALUE = 100;
 
 const HOTEL_TYPES = {
   palace: {
@@ -44,11 +46,7 @@ priceInput.min = HOTEL_TYPES[typeSelect.value].minPrice;
 guestsSelect.querySelector(`[value="${roomsSelect.value}"]`).setAttribute(`selected`, ``);
 
 const checkValidationMessage = (field) => {
-  if (field.validationMessage !== ``) {
-    field.style.boxShadow = `0 0 2px 2px #ff0000`;
-  } else {
-    field.style.boxShadow = `none`;
-  }
+  field.style.boxShadow = (field.validationMessage !== ``) ? `0 0 2px 2px #ff0000` : `none`;
 };
 
 const onTitleInputInput = () => {
@@ -113,10 +111,12 @@ const onGuestsSelectChange = () => {
   const roomsValue = roomsSelect.value;
   const guestsValue = guestsSelect.value;
 
-  if (roomsValue < 100 && +guestsValue !== 0 && guestsValue > roomsValue) {
+  if (roomsValue < MAX_ROOMS_VALUE && +guestsValue !== MIN_GUESTS_VALUE && guestsValue > roomsValue) {
     guestsSelect.setCustomValidity(`На одного человека должно приходиться не меньше одной комнаты`);
-  } else if ((roomsValue < 100 && +guestsValue === 0) || (+roomsValue === 100 && +guestsValue !== 0)) {
-    guestsSelect.setCustomValidity(`Невозможный вариант размещения`);
+  } else if (roomsValue < MAX_ROOMS_VALUE && +guestsValue === MIN_GUESTS_VALUE) {
+    guestsSelect.setCustomValidity(`А как же гости? Впустите хотя бы одного`);
+  } else if (+roomsValue === MAX_ROOMS_VALUE && +guestsValue !== MIN_GUESTS_VALUE) {
+    guestsSelect.setCustomValidity(`В таких хоромах гостям не место`);
   } else {
     guestsSelect.setCustomValidity(``);
   }

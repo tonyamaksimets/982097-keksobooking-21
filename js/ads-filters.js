@@ -18,107 +18,51 @@ const PRICE_FILTERS = {
   },
 };
 
+const FILTERED_ADS_QUANTITY = 5;
+
 const filtersForm = document.querySelector(`.map__filters`);
 const typeFilter = filtersForm.querySelector(`#housing-type`);
 const priceFilter = filtersForm.querySelector(`#housing-price`);
 const roomsFilter = filtersForm.querySelector(`#housing-rooms`);
 const guestsFilter = filtersForm.querySelector(`#housing-guests`);
 
-const filterByType = (array, typeValue) => {
-  let filteredArray = [];
+const isFitToFilters = (ad, typeValue, priceValue, roomsValue, guestsValue, featuresValue) => {
+  const isFitToType = typeValue === `any` || ad.offer.type === typeValue;
 
-  if (typeValue !== `any`) {
-    array.forEach((item) => {
-      if (item.offer.type === typeValue) {
-        filteredArray.push(item);
-      }
-    });
-  } else {
-    filteredArray = array;
+  const isFitToPrice = (priceValue === `any` || ad.offer.price >= PRICE_FILTERS[priceValue].min && ad.offer.price <= PRICE_FILTERS[priceValue].max);
+
+  const isFitToRooms = roomsValue === `any` || +ad.offer.rooms === +roomsValue;
+
+  const isFitToGuests = guestsValue === `any` || +ad.offer.guests === +guestsValue;
+
+  let isFitToFeatures = true;
+
+  for (let j = 0; j < featuresValue.length; j++) {
+    if (!ad.offer.features.includes(featuresValue[j].value, 0)) {
+      isFitToFeatures = false;
+      break;
+    }
   }
 
-  return filteredArray;
-};
-
-
-const filterByPrice = (array, priceValue) => {
-  let filteredArray = [];
-
-  if (priceValue !== `any`) {
-    array.forEach((item) => {
-      if (item.offer.price >= PRICE_FILTERS[priceValue].min && item.offer.price <= PRICE_FILTERS[priceValue].max) {
-        filteredArray.push(item);
-      }
-    });
-  } else {
-    filteredArray = array;
-  }
-
-  return filteredArray;
-};
-
-const filterByRooms = (array, roomsValue) => {
-  let filteredArray = [];
-
-  if (roomsValue !== `any`) {
-    array.forEach((item) => {
-      if (item.offer.rooms === +roomsValue) {
-        filteredArray.push(item);
-      }
-    });
-  } else {
-    filteredArray = array;
-  }
-
-  return filteredArray;
-};
-
-const filterByGuests = (array, guestsValue) => {
-  let filteredArray = [];
-
-  if (guestsValue !== `any`) {
-    array.forEach((item) => {
-      if (item.offer.guests === +guestsValue) {
-        filteredArray.push(item);
-      }
-    });
-  } else {
-    filteredArray = array;
-  }
-
-  return filteredArray;
-};
-
-const filterByFeatures = (array, featuresValue) => {
-  let filteredArray = [];
-
-  if (featuresValue) {
-    filteredArray = array.slice();
-    let auxiliaryArray = [];
-    featuresValue.forEach((feature) => {
-      filteredArray.forEach((item) => {
-        if (item.offer.features.includes(feature.value, 0)) {
-          auxiliaryArray.push(item);
-        }
-      });
-      filteredArray = auxiliaryArray.slice();
-      auxiliaryArray = [];
-    });
-  } else {
-    filteredArray = array;
-  }
-
-  return filteredArray;
+  return isFitToType && isFitToPrice && isFitToRooms && isFitToGuests && isFitToFeatures;
 };
 
 const getFilteredAds = (ads, typeValue, priceValue, roomsValue, guestsValue, featuresValue) => {
-  let filteredAds = filterByType(ads, typeValue);
-  filteredAds = filterByPrice(filteredAds, priceValue);
-  filteredAds = filterByRooms(filteredAds, roomsValue);
-  filteredAds = filterByGuests(filteredAds, guestsValue);
-  filteredAds = filterByFeatures(filteredAds, featuresValue);
+  let array = ads.slice();
+  let filteredAds = [];
+
+  for (let i = 0; i < ads.length; i++) {
+    if (isFitToFilters(ads[i], typeValue, priceValue, roomsValue, guestsValue, featuresValue)) {
+      filteredAds.push(array[i]);
+      if (filteredAds.length === FILTERED_ADS_QUANTITY) {
+        break;
+      }
+    }
+  }
+
   return filteredAds;
 };
+
 
 const onFilterChange = (ads) => {
   return window.util.debounce(() => {
