@@ -3,14 +3,14 @@
 const LEFT_MOUSE_BUTTON_CODE = 0;
 const TIMEOUT_IN_MS = 10000;
 const SERVER_DOWNLOAD_URL = `https://21.javascript.pages.academy/keksobooking/data`;
+const DEFAULT_MAIN_PIN_LEFT = 570;
+const DEFAULT_MAIN_PIN_TOP = 375;
 
 const map = document.querySelector(`.map`);
 const adForm = document.querySelector(`.ad-form`);
 const filtersForm = document.querySelector(`.map__filters`);
 
 const mainPin = map.querySelector(`.map__pin--main`);
-const DEFAULT_MAIN_PIN_LEFT = 570;
-const DEFAULT_MAIN_PIN_TOP = 375;
 
 const onNoActiveMainPinMouseDown = (evt) => {
   if (evt.button === LEFT_MOUSE_BUTTON_CODE) {

@@ -1,8 +1,9 @@
 'use strict';
 
-const adForm = document.querySelector(`.ad-form`);
-const serverUploadURL = `https://21.javascript.pages.academy/keksobooking`;
+const SERVER_UPLOAD_URL = `https://21.javascript.pages.academy/keksobooking`;
 const TIMEOUT_IN_MS = 10000;
+
+const adForm = document.querySelector(`.ad-form`);
 const adFormButtonReset = adForm.querySelector(`.ad-form__reset`);
 const adFormInputs = adForm.querySelectorAll(`input`);
 const adFormSelects = adForm.querySelectorAll(`select`);
@@ -27,7 +28,7 @@ const onError = () => {
 
 const onAdFormSubmit = (evt) => {
   evt.preventDefault();
-  window.load(serverUploadURL, `POST`, onSuccess, onError, TIMEOUT_IN_MS, new FormData(adForm));
+  window.load(SERVER_UPLOAD_URL, `POST`, onSuccess, onError, TIMEOUT_IN_MS, new FormData(adForm));
 };
 
 const onAdFormButtonResetClick = (evt) => {

@@ -25,6 +25,10 @@ const adCardTemplate = document.querySelector(`#card`)
 
 const filtersContainer = document.querySelector(`.map__filters-container`);
 
+const priceSpan = document.createElement(`span`);
+priceSpan.textContent = `/ночь`;
+
+
 const createAdCard = () => {
   const adCardElement = adCardTemplate.cloneNode(true);
 
@@ -48,13 +52,13 @@ const photoTemplate = adCard.querySelector(`.popup__photo`);
 const renderCapacity = (ad) => {
   const capacity = adCard.querySelector(`.popup__text--capacity`);
 
-  const roomsText = (ad.offer.rooms) ? window.util.getNoun(ad.offer.rooms, `Без комнат`, `${ad.offer.rooms} комната`, `${ad.offer.rooms} комнаты`, `${ad.offer.rooms} комнат`) : ``;
+  const roomsText = (ad.offer.rooms || ad.offer.rooms === 0) ? window.util.getNoun(ad.offer.rooms, `Без комнат`, `${ad.offer.rooms} комната`, `${ad.offer.rooms} комнаты`, `${ad.offer.rooms} комнат`) : ``;
 
   let guestsText;
   if (roomsText) {
-    guestsText = (ad.offer.guests) ? window.util.getNoun(ad.offer.guests, `, не для гостей`, ` для ${ad.offer.guests} гостя`, ` для ${ad.offer.guests} гостей`, ` для ${ad.offer.guests} гостей`) : ``;
+    guestsText = (ad.offer.guests || ad.offer.guests === 0) ? window.util.getNoun(ad.offer.guests, `, не для гостей`, ` для ${ad.offer.guests} гостя`, ` для ${ad.offer.guests} гостей`, ` для ${ad.offer.guests} гостей`) : ``;
   } else {
-    guestsText = (ad.offer.guests) ? window.util.getNoun(ad.offer.guests, `Не для гостей`, `Для ${ad.offer.guests} гостя`, `Для ${ad.offer.guests} гостей`, `Для ${ad.offer.guests} гостей`) : ``;
+    guestsText = (ad.offer.guests || ad.offer.guests === 0) ? window.util.getNoun(ad.offer.guests, `Не для гостей`, `Для ${ad.offer.guests} гостя`, `Для ${ad.offer.guests} гостей`, `Для ${ad.offer.guests} гостей`) : ``;
   }
 
   capacity.textContent = `${roomsText}${guestsText}`;
@@ -141,7 +145,8 @@ const renderAdCard = (ad) => {
 
   const price = adCard.querySelector(`.popup__text--price`);
   isAdFieldExist(ad.offer.price, price, () => {
-    price.innerHTML = `${ad.offer.price}&#x20bd;<span>/ночь</span>`;
+    price.textContent = `${ad.offer.price}₽`;
+    price.append(priceSpan);
   });
 
   const type = adCard.querySelector(`.popup__type`);

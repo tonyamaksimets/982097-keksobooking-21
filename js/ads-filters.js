@@ -26,25 +26,22 @@ const priceFilter = filtersForm.querySelector(`#housing-price`);
 const roomsFilter = filtersForm.querySelector(`#housing-rooms`);
 const guestsFilter = filtersForm.querySelector(`#housing-guests`);
 
-const isFitToFilters = (ad, typeValue, priceValue, roomsValue, guestsValue, featuresValue) => {
-  const isFitToType = typeValue === `any` || ad.offer.type === typeValue;
+const isAdFitToFilters = (ad, typeValue, priceValue, roomsValue, guestsValue, featuresValue) => {
+  let isFitToFilters = (typeValue === `any` || ad.offer.type === typeValue) &&
+    (priceValue === `any` || ad.offer.price >= PRICE_FILTERS[priceValue].min && ad.offer.price <= PRICE_FILTERS[priceValue].max) &&
+    (roomsValue === `any` || +ad.offer.rooms === +roomsValue) &&
+    (guestsValue === `any` || +ad.offer.guests === +guestsValue);
 
-  const isFitToPrice = (priceValue === `any` || ad.offer.price >= PRICE_FILTERS[priceValue].min && ad.offer.price <= PRICE_FILTERS[priceValue].max);
-
-  const isFitToRooms = roomsValue === `any` || +ad.offer.rooms === +roomsValue;
-
-  const isFitToGuests = guestsValue === `any` || +ad.offer.guests === +guestsValue;
-
-  let isFitToFeatures = true;
-
-  for (let j = 0; j < featuresValue.length; j++) {
-    if (!ad.offer.features.includes(featuresValue[j].value, 0)) {
-      isFitToFeatures = false;
-      break;
+  if (isFitToFilters && featuresValue) {
+    for (let j = 0; j < featuresValue.length; j++) {
+      if (!ad.offer.features.includes(featuresValue[j].value, 0)) {
+        isFitToFilters = false;
+        break;
+      }
     }
   }
 
-  return isFitToType && isFitToPrice && isFitToRooms && isFitToGuests && isFitToFeatures;
+  return isFitToFilters;
 };
 
 const getFilteredAds = (ads, typeValue, priceValue, roomsValue, guestsValue, featuresValue) => {
@@ -52,7 +49,7 @@ const getFilteredAds = (ads, typeValue, priceValue, roomsValue, guestsValue, fea
   let filteredAds = [];
 
   for (let i = 0; i < ads.length; i++) {
-    if (isFitToFilters(ads[i], typeValue, priceValue, roomsValue, guestsValue, featuresValue)) {
+    if (isAdFitToFilters(ads[i], typeValue, priceValue, roomsValue, guestsValue, featuresValue)) {
       filteredAds.push(array[i]);
       if (filteredAds.length === FILTERED_ADS_QUANTITY) {
         break;
